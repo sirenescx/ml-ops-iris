@@ -1,28 +1,24 @@
 from pathlib import Path
 from typing import Union
 
-
-def exists(filepath: Union[Path, str]) -> bool:
-    return cast_to_path(filepath).exists()
-
-
-def is_file(filepath: Union[Path, str]) -> bool:
-    return cast_to_path(filepath).is_file()
+from joblib import dump, load
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 
-def get_directory(filepath: Union[Path, str]) -> Path:
-    return cast_to_path(filepath).parent.absolute()
+def load_from_bin(path: Path) -> Union[SVC, StandardScaler]:
+    try:
+        return load(path)
+    except Exception as exception:
+        raise ValueError(
+            f'Failed to load file, cause: {exception}'
+        ) from exception
 
 
-def get_filename(filepath: str) -> str:
-    return cast_to_path(filepath).name
-
-
-def get_filepath(directory: Union[Path, str], filename: Union[Path, str]):
-    return get_directory(cast_to_path(directory)) / cast_to_path(filename)
-
-
-def cast_to_path(filepath: Union[Path, str]) -> Path:
-    if isinstance(filepath, str):
-        filepath = Path(filepath)
-    return filepath
+def save_to_bin(object: Union[SVC, StandardScaler], path: Path):
+    try:
+        dump(object, path)
+    except Exception as exception:
+        raise ValueError(
+            f'Failed to save file, cause: {exception}'
+        ) from exception

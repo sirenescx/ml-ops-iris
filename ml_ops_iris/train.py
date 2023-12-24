@@ -1,6 +1,5 @@
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
 
@@ -11,7 +10,6 @@ from ml_ops_iris.operations.train.preprocess_features import (
 )
 from ml_ops_iris.operations.train.split_dataset import DatasetSplittingOperation
 from ml_ops_iris.operations.train.train_model import ModelTrainingOperation
-from ml_ops_iris.utils import get_directory
 
 
 class TrainingPipeline:
@@ -29,26 +27,40 @@ class TrainingPipeline:
         self._model_training_op = model_training_op
         self._cross_validation_op = cross_validation_op
 
-    def train(self, path: Union[Path, str], target_column_name: str = 'target'):
+    def train(
+        self,
+        dataset_path: Path,
+        scaler_path: Path,
+        model_path: Path,
+        target_column: str,
+        parameters,
+        optimizer_parameters,
+    ):
         logger: Logger = getLogger(__name__)
 
         logger.info('Started dataset preprocessing')
-        data: pd.DataFrame = self._dataset_loading_op.load(path)
+        data: pd.DataFrame = self._dataset_loading_op.load(path=dataset_path)
         features, target = self._dataset_splitting_op.split(
-            data, target_column_name
+            dataset=data, target_column_name=target_column
         )
-        features = self._features_preprocessing_op.preprocess(features)
+        features = self._features_preprocessing_op.preprocess(
+            features=features, scaler_path=scaler_path
+        )
         logger.info('Ended dataset preprocessing')
 
         logger.info('Started model training')
         model = self._model_training_op.train(
-            features, target, get_directory(path)
+            features=features,
+            target=target,
+            model_path=model_path,
+            parameters=parameters,
+            optimizer_parameters=optimizer_parameters,
         )
         logger.info('Ended model training')
 
         logger.info('Started cross validation')
         metrics: dict[str, float] = self._cross_validation_op.validate(
-            model, features, target
+            model=model, features=features, target=target
         )
         logger.info('Ended cross validation')
 
