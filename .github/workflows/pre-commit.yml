@@ -5,7 +5,12 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }}, py-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+          os: [ubuntu-latest, windows-latest, macOS-latest]
+          python-version: ["3.9", "3.10", "3.11"]
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v3
