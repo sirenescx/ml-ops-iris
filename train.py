@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import hydra
+from dvc.repo import Repo
 from hydra.core.config_store import ConfigStore
 
 from ml_ops_iris.configs.train import TrainConfig
@@ -22,6 +23,9 @@ CONFIG_STORE.store(name='base_train_config', node=TrainConfig)
 def main(config: TrainConfig) -> None:
     data_directory: Path = Path(__file__).resolve().parent / 'data'
 
+    repo = Repo('.dvc')
+    repo.pull()
+
     pipeline: TrainingPipeline = TrainingPipeline(
         dataset_loading_op=DatasetLoadingOperation(),
         dataset_splitting_op=DatasetSplittingOperation(),
@@ -37,6 +41,10 @@ def main(config: TrainConfig) -> None:
         parameters=config.model.parameters,
         optimizer_parameters=config.model.optimizer_parameters,
     )
+
+    repo.add(targets=[data_directory.name])
+    repo.commit()
+    repo.push()
 
 
 if __name__ == '__main__':

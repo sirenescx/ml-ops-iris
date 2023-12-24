@@ -8,7 +8,8 @@ from sklearn.svm import SVC
 
 def load_from_bin(path: Path) -> Union[SVC, StandardScaler]:
     try:
-        return load(path)
+        create_directories_if_not_exist(path=path)
+        return load(filename=path)
     except Exception as exception:
         raise ValueError(
             f'Failed to load file, cause: {exception}'
@@ -17,8 +18,15 @@ def load_from_bin(path: Path) -> Union[SVC, StandardScaler]:
 
 def save_to_bin(object: Union[SVC, StandardScaler], path: Path):
     try:
-        dump(object, path)
+        create_directories_if_not_exist(path=path)
+        dump(value=object, filename=path)
     except Exception as exception:
         raise ValueError(
             f'Failed to save file, cause: {exception}'
         ) from exception
+
+
+def create_directories_if_not_exist(path: Path):
+    path = path.absolute().parent
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=False)

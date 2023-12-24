@@ -8,6 +8,9 @@ from ml_ops_iris.operations.infer.predict import PredictionOperation
 from ml_ops_iris.operations.infer.preprocess_features import (
     FeaturesPreprocessingOperation,
 )
+from ml_ops_iris.operations.infer.save_predictions import (
+    PredictsSavingOperation,
+)
 
 
 class InferringPipeline:
@@ -16,10 +19,12 @@ class InferringPipeline:
         dataset_loading_op: DatasetLoadingOperation,
         features_preprocessing_op: FeaturesPreprocessingOperation,
         prediction_op: PredictionOperation,
+        predictions_saving_op: PredictsSavingOperation,
     ):
         self._dataset_loading_op = dataset_loading_op
         self._features_preprocessing_op = features_preprocessing_op
         self._prediction_op = prediction_op
+        self._predictions_saving_op = predictions_saving_op
 
     def infer(
         self,
@@ -41,6 +46,7 @@ class InferringPipeline:
         predictions = self._prediction_op.predict(
             model_path=model_path, features=features
         )
+        self._predictions_saving_op.save(
+            features=features, predicts=predictions, path=predicts_path
+        )
         logger.info('Ended getting predictions')
-
-        logger.info(', '.join((str(prediction) for prediction in predictions)))
