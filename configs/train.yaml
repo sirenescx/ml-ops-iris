@@ -1,0 +1,31 @@
+defaults:
+    - base_train_config
+    - _self_
+
+dataset:
+    path: datasets/train/iris_train.csv
+    target_column: target
+
+model:
+    path: models/svc_iris.bin
+    parameters:
+        tolerance: 1e-3
+    optimizer_parameters:
+        regularization:
+            - 0.1
+            - 1
+            - 10
+            - 100
+            - 1000
+        gamma:
+            - 1
+            - 0.1
+            - 0.01
+            - 0.001
+            - 0.0001
+        kernel:
+            - rbf
+            - linear
+
+scaler:
+    path: scalers/scaler.bin

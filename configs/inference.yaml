@@ -1,0 +1,15 @@
+defaults:
+    - base_inference_config
+    - _self_
+
+dataset:
+    path: datasets/infer/iris_test.csv
+
+model:
+    path: models/svc_iris.bin
+
+scaler:
+    path: scalers/scaler.bin
+
+predicts:
+    path: predicts/predicts.csv

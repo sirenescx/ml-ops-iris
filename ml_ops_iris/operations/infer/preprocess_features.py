@@ -1,25 +1,16 @@
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
-from joblib import load
 from sklearn.preprocessing import StandardScaler
+
+from ml_ops_iris.utils import load_from_bin
 
 
 class FeaturesPreprocessingOperation:
     def preprocess(
-        self, features: pd.DataFrame, path: Union[Path, str] = 'std_scaler.bin'
+        self, features: pd.DataFrame, scaler_path: Path
     ) -> pd.DataFrame:
-        scaler: StandardScaler = self._load_scaler(path)
+        feature_names: list[str] = features.columns.tolist()
+        scaler: StandardScaler = load_from_bin(path=scaler_path)
         features = scaler.transform(features)
-
-        return pd.DataFrame(features)
-
-    def _load_scaler(self, path: Union[Path, str]) -> StandardScaler:
-        try:
-            scaler: StandardScaler = load(path)
-            return scaler
-        except Exception as exception:
-            raise ValueError(
-                f'Failed to load scaler, cause: {exception}'
-            ) from exception
+        return pd.DataFrame(features, columns=feature_names)
