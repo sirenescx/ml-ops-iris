@@ -6,7 +6,6 @@ from hydra.core.config_store import ConfigStore
 
 from ml_ops_iris.configs.train import TrainConfig
 from ml_ops_iris.operations.common.load_dataset import DatasetLoadingOperation
-from ml_ops_iris.operations.train.cross_validate import CrossValidationOperation
 from ml_ops_iris.operations.train.preprocess_features import (
     FeaturesPreprocessingOperation,
 )
@@ -31,15 +30,15 @@ def main(config: TrainConfig) -> None:
         dataset_splitting_op=DatasetSplittingOperation(),
         features_preprocessing_op=FeaturesPreprocessingOperation(),
         model_training_op=ModelTrainingOperation(),
-        cross_validation_op=CrossValidationOperation(),
     )
     pipeline.train(
         dataset_path=data_directory / config.dataset.path,
         scaler_path=data_directory / config.scaler.path,
         model_path=data_directory / config.model.path,
         target_column=config.dataset.target_column,
-        parameters=config.model.parameters,
         optimizer_parameters=config.model.optimizer_parameters,
+        custom_metrics=config.model.custom_metrics,
+        ml_flow_parameters=config.ml_flow,
     )
 
     repo.add(targets=[data_directory.name])

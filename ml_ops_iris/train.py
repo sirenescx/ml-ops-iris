@@ -4,7 +4,6 @@ from pathlib import Path
 import pandas as pd
 
 from ml_ops_iris.operations.common.load_dataset import DatasetLoadingOperation
-from ml_ops_iris.operations.train.cross_validate import CrossValidationOperation
 from ml_ops_iris.operations.train.preprocess_features import (
     FeaturesPreprocessingOperation,
 )
@@ -19,13 +18,11 @@ class TrainingPipeline:
         features_preprocessing_op: FeaturesPreprocessingOperation,
         dataset_splitting_op: DatasetSplittingOperation,
         model_training_op: ModelTrainingOperation,
-        cross_validation_op: CrossValidationOperation,
     ):
         self._dataset_loading_op = dataset_loading_op
         self._features_preprocessing_op = features_preprocessing_op
         self._dataset_splitting_op = dataset_splitting_op
         self._model_training_op = model_training_op
-        self._cross_validation_op = cross_validation_op
 
     def train(
         self,
@@ -33,8 +30,9 @@ class TrainingPipeline:
         scaler_path: Path,
         model_path: Path,
         target_column: str,
-        parameters,
         optimizer_parameters,
+        custom_metrics,
+        ml_flow_parameters,
     ):
         logger: Logger = getLogger(__name__)
 
@@ -49,20 +47,12 @@ class TrainingPipeline:
         logger.info('Ended dataset preprocessing')
 
         logger.info('Started model training')
-        model = self._model_training_op.train(
+        self._model_training_op.train(
             features=features,
             target=target,
             model_path=model_path,
-            parameters=parameters,
             optimizer_parameters=optimizer_parameters,
+            custom_metrics=custom_metrics,
+            ml_flow_parameters=ml_flow_parameters,
         )
         logger.info('Ended model training')
-
-        logger.info('Started cross validation')
-        metrics: dict[str, float] = self._cross_validation_op.validate(
-            model=model, features=features, target=target
-        )
-        logger.info('Ended cross validation')
-
-        for metric_name, metric_value in metrics.items():
-            logger.info('%s = %f', metric_name, metric_value)
