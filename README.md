@@ -6,7 +6,8 @@ dataset using the CatBoostClassifier model.
 #### Basic usage
 
 -   python3 train.py for model training
--   python3 infer.py to get predictions on the test dataset, dataset with obtained predictions will be stored in data > predicts
+-   python3 infer.py to get predictions on the test dataset, dataset with obtained
+    predictions will be stored in data > predicts
 
 #### Advanced usage
 
