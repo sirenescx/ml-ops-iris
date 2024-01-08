@@ -21,10 +21,11 @@ class ModelTrainingOperation:
         mlflow.set_tracking_uri(
             uri=construct_uri(
                 scheme=ml_flow_parameters.scheme,
-                host=ml_flow_parameters.host,
+                host='localhost',
                 port=ml_flow_parameters.port,
             )
         )
+        mlflow.end_run()
         mlflow.set_experiment(str(int(datetime.now().timestamp())))
 
         trained_model: CatBoostClassifier = self._train_model(
@@ -54,7 +55,7 @@ class ModelTrainingOperation:
         class MlFlowCallback:
             def after_iteration(self, info):
                 info = vars(info)
-                for title, metric in (info.get('metrics') or {}).items():
+                for _, metric in (info.get('metrics') or {}).items():
                     for series, log in metric.items():
                         if series == optimizer_parameters.loss_function:
                             mlflow.log_metric('Loss', log[-1])

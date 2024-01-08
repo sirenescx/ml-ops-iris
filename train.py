@@ -4,14 +4,14 @@ import hydra
 from dvc.repo import Repo
 from hydra.core.config_store import ConfigStore
 
-from ml_ops_iris.configs.train import TrainConfig
+from ml_ops_iris.configs.train_config import TrainConfig
 from ml_ops_iris.operations.common.load_dataset import DatasetLoadingOperation
 from ml_ops_iris.operations.train.preprocess_features import (
     FeaturesPreprocessingOperation,
 )
 from ml_ops_iris.operations.train.split_dataset import DatasetSplittingOperation
 from ml_ops_iris.operations.train.train_model import ModelTrainingOperation
-from ml_ops_iris.train import TrainingPipeline
+from ml_ops_iris.train_pipeline import TrainingPipeline
 
 
 CONFIG_STORE = ConfigStore.instance()

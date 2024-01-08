@@ -4,8 +4,8 @@ import hydra
 from dvc.repo import Repo
 from hydra.core.config_store import ConfigStore
 
-from ml_ops_iris.configs.infer import InferConfig
-from ml_ops_iris.infer import InferringPipeline
+from ml_ops_iris.configs.infer_config import InferConfig
+from ml_ops_iris.infer_pipeline import InferringPipeline
 from ml_ops_iris.operations.common.load_dataset import DatasetLoadingOperation
 from ml_ops_iris.operations.infer.predict import PredictionOperation
 from ml_ops_iris.operations.infer.preprocess_features import (
