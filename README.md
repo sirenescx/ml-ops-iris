@@ -1,3 +1,5 @@
+![python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue) ![dvc](https://img.shields.io/badge/DVC-945DD6?style=for-the-badge&logo=dvc&logoColor=white) ![catboost](https://img.shields.io/badge/catboost-ffc300?style=for-the-badge&logo=catboost) ![mlflow](https://img.shields.io/badge/mlflow-white?style=for-the-badge&logo=mlflow)
+
 This repository contains a solution to the multiclass classification problem on the Iris
 dataset using the CatBoostClassifier model.
 
